@@ -7,60 +7,71 @@
 
 ## Introduction
 
-In Java, unexpected behavior is managed through "exceptions". Exceptions are
-"thrown" and "caught". The code that generates the exception "throws" it and the
-code that called the code that generated the exception can choose to "catch" it
-or throw it as well.
+In Java, unexpected behavior is managed through exceptions. **Exceptions**
+indicate an issue that occurs with the code upon execution. There are ways to
+navigate these exceptions and that is through exception handling. **Exception**
+**handling** is a way to handle exceptions through the process of "catching"
+them. Exceptions can be "thrown" and "caught". The code that generates the
+exception "throws" it and the code that called the method that generated the
+exception can choose to "catch" it or "throw" it as well.
 
 ## Exception Handling in Java
 
-Let's use an example from our user interaction code:
+To demonstrate exception handling, we can look back at an example from our user
+interaction code:
 
 ```java
-    public static void main(String[] args) {
-        System.out.println("Please enter a number:");
-        Scanner inputScanner = new Scanner(System.in);
-        int userNumber = inputScanner.nextInt();
-        System.out.println("The user entered " + userNumber);
-    }
+public static void main(String[] args) {
+    System.out.println("Please enter a number:");
+    Scanner inputScanner = new Scanner(System.in);
+    int userNumber = inputScanner.nextInt();
+    System.out.println("The user entered " + userNumber);
+}
 ```
 
 The `nextInt()` method of the `Scanner` class can throw a
 `InputMismatchException`. It does so when the input entered by the user cannot
 be interpreted as an integer number. When it throws an exception, it creates an
-object of the type of the exception and returns it as the return for the method
-call instead of what it would normally return if everything worked as expected.
+object of the type of exception it wants to throw. For example, it might create
+an object of type `InputMismatchException` if the user did not enter an integer
+number. Once it creates this exception, it will stop the process of wherever it
+may be in the method, `nextInt()`, and return the exception to whoever
+originally called it. Note that when an exception is thrown, the method will not
+return what it would normally have returned if everything worked as expected.
 
-As the code that is using this method, we can "catch" the exception by wrapping
-the call for the method that throws it in a `try` and `catch` block, like this:
+The code that is receiving the exception can then choose to catch it by
+wrapping the call for the method that throws it in a `try-catch` block, like
+this:
 
 ```java
-    public static void main(String[] args) {
-        System.out.println("Please enter a number:");
-        Scanner inputScanner = new Scanner(System.in);
-        try {
-            int userNumber = inputScanner.nextInt();
-            System.out.println("The user entered " + userNumber);
-        } catch (InputMismatchException ime) {
-            System.out.println("The input was not a number");
-        }
+public static void main(String[] args) {
+    System.out.println("Please enter a number:");
+    Scanner inputScanner = new Scanner(System.in);
+    try {
+        int userNumber = inputScanner.nextInt();
+        System.out.println("The user entered " + userNumber);
+    } catch (InputMismatchException exception) {
+        System.out.println("The input was not a number");
     }
+}
 ```
 
-A `try` block can have as many statements in it as you want and is therefore
-also delimited with open and close curly braces. Any exception that are thrown
-by any code inside the `try` block will:
+A **try-catch block** tells the compiler that the code anticipates the
+unexpected exceptions and that it is prepared to handle it. A `try` block can
+have as many statements in it as we want and so it is enclosed with curly
+braces. Any exceptions that are thrown by any code inside the `try` block will:
 
 - Cause the execution of the statements inside the `try` block to be interrupted
-  immediately
-- Cause the execution to jump straight passed the remaining statements (if any)
-  in the `try` block into the beginning of the `catch` block
-- Pass an object of the type of the exception being thrown to the `catch` block
+  immediately.
+- Cause the execution to jump straight pass the remaining statements (if any)
+  in the `try` block into the beginning of the `catch` block.
+- Pass an object of the type of the exception being thrown to the `catch` block.
 
 Note that in the example above, the program will not execute the line
 `System.out.println("The user entered " + userNumber);` if the user enters an
-invalid number, since the exception will be thrown on the previous line,
-interrupting the execution of the `try` block
+invalid number since the exception will be thrown on the previous line. It
+will, instead, interrupt the execution of the `try` block and jump to the
+beginning of the `catch` block.
 
 The `InputMismatchException` is an "unchecked" exception, which means that the
 code that could potentially cause it to be thrown does not _have_ to catch it.
@@ -69,6 +80,6 @@ caught by any code that could potentially cause them to be thrown.
 
 For example, Java provides methods for reading data from files. In most cases,
 those methods throw a checked exception called `FileNotFoundException`, so that
-the code that uses them _must_ catch that exception or it will not compile. Note
-that the `try {} catch {}` block for a checked exception follows exactly the
+the code that uses them _must_ catch that exception, or it will not compile.
+Note that the `try {} catch {}` block for a checked exception follows exactly the
 same structure as the `try {} catch {}` block for an unchecked exception.
